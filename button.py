@@ -2,10 +2,7 @@ import pygame
 
 class Button(object):
     """
-    We create Button with provided text, color, position and size
-    Button has methods:
-    draw() which draws button on given surface
-    is_clicked() returns True when button is clicked
+    Creates Button with provided text, color, position and size
     """
     def __init__(self, size_x, size_y, position_x, position_y, thickness, surface, color, tekst):
         self.size_x = size_x
@@ -18,7 +15,13 @@ class Button(object):
         self.tekst = tekst
 
     def draw(self):
+        """
+        Draws button on given surface
+        """
+        #draw button's frame
         pygame.draw.rect(self.surface, self.color, pygame.locals.Rect((self.position_x, self.position_y), (self.size_x, self.size_y)), self.thickness)
+
+        #writes text on the button
         font = pygame.font.Font('freesansbold.ttf', 32)
         text = font.render(self.tekst, True, self.color)
         textRect = text.get_rect()
@@ -29,14 +32,14 @@ class Button(object):
         """
         :return: True when button is clicked
         """
-        # pobierz stan guzików myszki z wykorzystaniem funcji pygame
+        #get mouse buttons state
         buttons = pygame.mouse.get_pressed()
         if not any(buttons):
-            # ignoruj zdarzenie jeśli żaden z guzików nie jest wciśnięty
+            #ignore event when none of buttons is pressed
             return
-
-        # pobierz pozycję kursora na mierzoną w pikselach
+        #get mouse position measured in pixels
         x, y = pygame.mouse.get_pos()
 
+        #check if mouse position is within borders of button
         if (x >= self.position_x and x<= self.position_x+self.size_x and y>=self.position_y and y<=self.position_y+self.size_y):
             return True

@@ -5,48 +5,51 @@ import pygame.locals
 from pygame.locals import MOUSEMOTION, MOUSEBUTTONDOWN
 from board import Board
 from population import Population
-from constants import *
-
-
 
 class GameOfLife(object):
 
     """
-    Łączy wszystkie elementy gry w całość.
+    Puts together all parts of the game.
     """
 
     def __init__(self, width, height, cell_size=10):
         """
-        Przygotowanie ustawień gry
-        :param width: szerokość planszy mierzona liczbą komórek
-        :param height: wysokość planszy mierzona liczbą komórek
-        :param cell_size: bok komórki w pikselach
+        Settings for the game
+        :param width: width measured by number of cells
+        :param height: height measured by number of cells
+        :param cell_size: size of the cell
         """
         pygame.init()
+
         self.board = Board(width * cell_size, height * cell_size)
-        # zegar którego użyjemy do kontrolowania szybkości rysowania
-        # kolejnych klatek gry
+
+        #Clock responsible for frequency of drawing cells
         self.fps_clock = pygame.time.Clock()
+
         self.population = Population(width, height, cell_size)
+
+        #To define whether the game has started or not
+        self.started = False
 
     def run(self):
         """
-        Główna pętla gry
+        Main loop
         """
         while not self.handle_events():
-            # działaj w pętli do momentu otrzymania sygnału do wyjścia
-            self.board.draw(
-                self.population,
-            )
-            if getattr(self, "started", None):
+
+            self.board.draw(self.population)
+
+            if self.started:
                 self.population.cycle_generation()
+
             self.fps_clock.tick(15)
 
     def handle_events(self):
         """
-        Obsługa zdarzeń systemowych, tutaj zinterpretujemy np. ruchy myszką
+        Function responsible for handling events in game
+        for example mouse clicks
 
-        :return True jeżeli pygame przekazał zdarzenie wyjścia z gry
+        :return True if the game should end
         """
         for event in pygame.event.get():
             if event.type == pygame.locals.QUIT:

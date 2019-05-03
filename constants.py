@@ -2,7 +2,7 @@
 DEAD = 0
 ALIVE = 1
 
-#Colours
+#Colors
 RED = (255,0,0)
 GREEN=(0,128,0)
 BLUE=(0,0,255)
