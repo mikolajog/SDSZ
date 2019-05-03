@@ -2,9 +2,11 @@
 
 import pygame
 import pygame.locals
-
+from pygame.locals import MOUSEMOTION, MOUSEBUTTONDOWN
 from board import Board
 from population import Population
+from constants import *
+
 
 
 class GameOfLife(object):
@@ -51,10 +53,19 @@ class GameOfLife(object):
                 pygame.quit()
                 return True
 
-            from pygame.locals import MOUSEMOTION, MOUSEBUTTONDOWN
             if event.type == MOUSEMOTION or event.type == MOUSEBUTTONDOWN:
-                self.population.handle_mouse()
+                if self.board.start_button.is_clicked():
+                    self.started = True
 
-            from pygame.locals import KEYDOWN, K_RETURN
-            if event.type == KEYDOWN and event.key == K_RETURN:
-                self.started = True
+                elif self.board.pause_button.is_clicked():
+                    self.started = False
+
+                elif self.board.end_button.is_clicked():
+                    self.population.generation = self.population.reset_generation()
+                    self.population.cycle_generation()
+                    self.started = False
+
+                else:
+                    self.population.handle_mouse()
+        return False
+

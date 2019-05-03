@@ -1,15 +1,15 @@
 import pygame
 
-from constants import DEAD, ALIVE
+from constants import *
 
 class Population(object):
     """
-    Populacja komórek
+    Population of cells
     """
 
     def __init__(self, width, height, cell_size=10):
         """
-        Przygotowuje ustawienia populacji
+        Prepares population settings
 
         :param width: szerokość planszy mierzona liczbą komórek
         :param height: wysokość planszy mierzona liczbą komórek
@@ -21,7 +21,7 @@ class Population(object):
         self.generation = self.reset_generation()
 
     def reset_generation(self):
-        return [[DEAD for y in range(self.height)] for x in range(self.width)]
+        return [[DEAD for _ in range(self.height)] for _ in range(self.width)]
 
     def handle_mouse(self):
         # pobierz stan guzików myszki z wykorzystaniem funcji pygame
@@ -37,10 +37,14 @@ class Population(object):
         # pobierz pozycję kursora na planszy mierzoną w pikselach
         x, y = pygame.mouse.get_pos()
 
+        if(x>self.width*self.box_size):
+            return
+
         # przeliczamy współrzędne komórki z pikseli na współrzędne komórki w macierz
         # gracz może kliknąć w kwadracie o szerokości box_size by wybrać komórkę
         x /= self.box_size
         y /= self.box_size
+
 
         # ustaw stan komórki na macierzy
         self.generation[int(x)][int(y)] = ALIVE if alive else DEAD
@@ -52,9 +56,8 @@ class Population(object):
         for x, y in self.alive_cells():
             size = (self.box_size, self.box_size)
             position = (x * self.box_size, y * self.box_size)
-            color = (255, 255, 255)
             thickness = 1
-            pygame.draw.rect(surface, color, pygame.locals.Rect(position, size), thickness)
+            pygame.draw.rect(surface, PINK, pygame.locals.Rect(position, size), thickness)
 
     def alive_cells(self):
         """
