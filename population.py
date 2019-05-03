@@ -11,9 +11,9 @@ class Population(object):
         """
         Prepares population settings
 
-        :param width: szerokość planszy mierzona liczbą komórek
-        :param height: wysokość planszy mierzona liczbą komórek
-        :param cell_size: bok komórki w pikselach
+        :param width: width measured by number of cells
+        :param height: height measured by number of cells
+        :param cell_size: size of the cell
         """
         self.box_size = cell_size
         self.height = height
@@ -24,34 +24,32 @@ class Population(object):
         return [[DEAD for _ in range(self.height)] for _ in range(self.width)]
 
     def handle_mouse(self):
-        # pobierz stan guzików myszki z wykorzystaniem funcji pygame
+        # get mouse buttons state
         buttons = pygame.mouse.get_pressed()
         if not any(buttons):
-            # ignoruj zdarzenie jeśli żaden z guzików nie jest wciśnięty
+            # ignore event when none of buttons is pressed
             return
 
-        # dodaj żywą komórką jeśli wciśnięty jest pierwszy guzik myszki
-        # będziemy mogli nie tylko dodawać żywe komórki ale także je usuwać
+        #if we click left button we add cells otherwise we delete them
         alive = True if buttons[0] else False
 
-        # pobierz pozycję kursora na planszy mierzoną w pikselach
+        # get mouse position measured in pixels
         x, y = pygame.mouse.get_pos()
 
+        #to check if its within game board size
         if(x>self.width*self.box_size):
             return
 
-        # przeliczamy współrzędne komórki z pikseli na współrzędne komórki w macierz
-        # gracz może kliknąć w kwadracie o szerokości box_size by wybrać komórkę
+        #counting coordinates of cells from pixels to matrix
         x /= self.box_size
         y /= self.box_size
 
-
-        # ustaw stan komórki na macierzy
+        #setting cells states on matrix
         self.generation[int(x)][int(y)] = ALIVE if alive else DEAD
 
     def draw_on(self, surface):
         """
-        Rysuje komórki na planszy
+        Draws cells on given surface
         """
         for x, y in self.alive_cells():
             size = (self.box_size, self.box_size)
@@ -61,63 +59,67 @@ class Population(object):
 
     def alive_cells(self):
         """
-        Generator zwracający współrzędne żywych komórek.
+        :return list of tuples with coordinates of alive cells
         """
+        list=[]
+
         for x in range(len(self.generation)):
             column = self.generation[x]
             for y in range(len(column)):
                 if column[y] == ALIVE:
-                    # jeśli komórka jest żywa zwrócimy jej współrzędne
-                    yield x, y
+                    # append if cell is alive
+                    list.append((x, y))
+
+        return list
 
     def neighbours(self, x, y):
         """
-        Generator zwracający wszystkich okolicznych sąsiadów
+        :return list of neighbours for cell with given x,y
         """
+
+        neighbours=[]
         for nx in range(x - 1, x + 2):
             for ny in range(y - 1, y + 2):
                 if nx == x and ny == y:
-                    # pomiń współrzędne centrum
+                    # skip when it's me
                     continue
                 if nx >= self.width:
-                    # sąsiad poza końcem planszy, bierzemy pierwszego w danym rzędzie
+                    #neighbour is further than end -> we take first in row
                     nx = 0
                 elif nx < 0:
-                    # sąsiad przed początkiem planszy, bierzemy ostatniego w danym rzędzie
+                    #neighbour before the beginning -> we take last in row
                     nx = self.width - 1
                 if ny >= self.height:
-                    # sąsiad poza końcem planszy, bierzemy pierwszego w danej kolumnie
+                    # neighbour is further than end -> we take first in column
                     ny = 0
                 elif ny < 0:
-                    # sąsiad przed początkiem planszy, bierzemy ostatniego w danej kolumnie
+                    # neighbour before the beginning -> we take last in column
                     ny = self.height - 1
 
-                # dla każdego nie pominiętego powyżej
-                # przejścia pętli zwróć komórkę w tych współrzędnych
-                yield self.generation[nx][ny]
+                #for any other:
+                neighbours.append(self.generation[nx][ny])
+
+        return neighbours
 
     def cycle_generation(self):
         """
-        Generuje następną generację populacji komórek
+        Generates next generation of alive cells
         """
         next_gen = self.reset_generation()
         for x in range(len(self.generation)):
             column = self.generation[x]
             for y in range(len(column)):
-                # pobieramy wartości sąsiadów
-                # dla żywej komórki dostaniemy wartość 1 (ALIVE)
-                # dla martwej otrzymamy wartość 0 (DEAD)
-                # zwykła suma pozwala nam określić liczbę żywych sąsiadów
+                #sum neighbours(ALIVE has value 1, DEAD has 0)
                 count = sum(self.neighbours(x, y))
                 if count == 3:
-                    # rozmnażamy się
+                    #We are ALIVE now
                     next_gen[x][y] = ALIVE
                 elif count == 2:
-                    # przechodzi do kolejnej generacji bez zmian
+                    #Its the same
                     next_gen[x][y] = column[y]
                 else:
-                    # za dużo lub za mało sąsiadów by przeżyć
+                    #Not enough neighbours -> DEAD
                     next_gen[x][y] = DEAD
 
-        # nowa generacja staje się aktualną generacją
+        #Next generation becomes "old" generation
         self.generation = next_gen
