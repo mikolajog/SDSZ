@@ -52,10 +52,10 @@ class Population(object):
         Draws cells on given surface
         """
         for x, y in self.alive_cells():
-            size = (self.box_size, self.box_size)
-            position = (x * self.box_size, y * self.box_size)
-            thickness = 1
-            pygame.draw.rect(surface, PINK, pygame.locals.Rect(position, size), thickness)
+            #size = (self.box_size, self.box_size)
+            #position = (x * self.box_size, y * self.box_size)
+            #thickness = 1
+            pygame.draw.rect(surface, PINK, (x * self.box_size, y * self.box_size,self.box_size, self.box_size ))
 
     def alive_cells(self):
         """
@@ -103,7 +103,7 @@ class Population(object):
 
     def cycle_generation(self):
         """
-        Generates next generation of alive cells
+        :return next generation of alive cells
         """
         next_gen = self.reset_generation()
         for x in range(len(self.generation)):
