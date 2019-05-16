@@ -1,5 +1,5 @@
 import pygame
-
+import constants
 from constants import *
 
 class Population(object):
@@ -105,6 +105,7 @@ class Population(object):
         """
         :return next generation of alive cells
         """
+        constants.number_of_generations += 1
         next_gen = self.reset_generation()
         for x in range(len(self.generation)):
             column = self.generation[x]

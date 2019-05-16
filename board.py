@@ -1,5 +1,6 @@
 import pygame
 import pygame.locals
+import constants
 from constants import *
 from button import Button
 
@@ -29,7 +30,8 @@ class Board(object):
 
         #Prepares buttons for menu
         self.start_button = Button(160, 50, self.width + 20, self.height * 0.2, 3, self.surface, RED, "Start")
-        self.pause_button = Button(160, 50, self.width + 20, self.height * 0.5, 3, self.surface, RED, "Pause")
+        self.pause_button = Button(160, 50, self.width + 20, self.height * 0.4, 3, self.surface, RED, "Pause")
+        self.next_button = Button(160, 50, self.width + 20, self.height * 0.6, 3, self.surface, RED, "Next")
         self.end_button = Button(160, 50, self.width + 20, self.height * 0.8, 3, self.surface, RED, "End")
 
 
@@ -51,6 +53,7 @@ class Board(object):
         #Buttons
         self.start_button.draw()
         self.pause_button.draw()
+        self.next_button.draw()
         self.end_button.draw()
 
         #Menu text
@@ -59,6 +62,21 @@ class Board(object):
         textRect = text.get_rect()
         textRect.center = (self.width+100, self.height*0.05)
         self.surface.blit(text, textRect)
+
+        #Generations count
+        font = pygame.font.Font('freesansbold.ttf', 16)
+        text = font.render("Generations: "+str(constants.number_of_generations), True, GREEN)
+        textRect = text.get_rect()
+        textRect.center = (self.width + 100, self.height * 0.12)
+        self.surface.blit(text, textRect)
+
+        #Time display
+        text = font.render("Time: " + str(round(constants.time_in_seconds,2)) + "s", True, GREEN)
+        textRect = text.get_rect()
+        textRect.center = (self.width + 100, self.height * 0.16)
+        self.surface.blit(text, textRect)
+
+
 
         #draws population on the surface
         for drawable in args:
