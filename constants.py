@@ -19,3 +19,4 @@ pause_time=0
 negative_time=0
 already_running = False
 step_running=False
+delay = 0

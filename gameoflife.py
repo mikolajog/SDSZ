@@ -47,7 +47,7 @@ class GameOfLife(object):
             self.board.draw(self.population)
             if self.started:
                 self.population.cycle_generation()
-
+                pygame.time.delay(constants.delay)
             self.fps_clock.tick(15)
 
 
@@ -96,6 +96,13 @@ class GameOfLife(object):
                     constants.step_running=True
                     self.started = False
                     self.population.cycle_generation()
+
+                elif self.board.slow_button.is_clicked():
+                        constants.delay+=50
+
+                elif self.board.speed_button.is_clicked():
+                    if (constants.delay>0):
+                        constants.delay-=50
 
                 elif self.board.end_button.is_clicked():
                     self.population.generation = self.population.reset_generation()

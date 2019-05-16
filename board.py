@@ -30,8 +30,10 @@ class Board(object):
 
         #Prepares buttons for menu
         self.start_button = Button(160, 50, self.width + 20, self.height * 0.2, 3, self.surface, RED, "Start")
-        self.pause_button = Button(160, 50, self.width + 20, self.height * 0.4, 3, self.surface, RED, "Pause")
-        self.next_button = Button(160, 50, self.width + 20, self.height * 0.6, 3, self.surface, RED, "Next")
+        self.pause_button = Button(160, 50, self.width + 20, self.height * 0.35, 3, self.surface, RED, "Pause")
+        self.next_button = Button(160, 50, self.width + 20, self.height * 0.5, 3, self.surface, RED, "Next")
+        self.slow_button = Button(75, 50, self.width + 20, self.height * 0.65, 3, self.surface, RED, ">")
+        self.speed_button = Button(75, 50, self.width + 105, self.height * 0.65, 3, self.surface, RED, ">>")
         self.end_button = Button(160, 50, self.width + 20, self.height * 0.8, 3, self.surface, RED, "End")
 
 
@@ -54,6 +56,8 @@ class Board(object):
         self.start_button.draw()
         self.pause_button.draw()
         self.next_button.draw()
+        self.slow_button.draw()
+        self.speed_button.draw()
         self.end_button.draw()
 
         #Menu text
@@ -76,7 +80,11 @@ class Board(object):
         textRect.center = (self.width + 100, self.height * 0.16)
         self.surface.blit(text, textRect)
 
-
+        # Delay display
+        text = font.render("Slowed down by: " + str(constants.delay) + "ms", True, GREEN)
+        textRect = text.get_rect()
+        textRect.center = (self.width + 100, self.height * 0.96)
+        self.surface.blit(text, textRect)
 
         #draws population on the surface
         for drawable in args:
