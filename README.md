@@ -1,4 +1,4 @@
 # SDSZ
-Project for SDSZ (Convay Game of Life)
+Project for SDSZ (Conway's Game of Life)
 
 Running application: run.py
