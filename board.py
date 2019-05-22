@@ -29,12 +29,13 @@ class Board(object):
         self.width = width
 
         #Prepares buttons for menu
-        self.start_button = Button(160, 50, self.width + 20, self.height * 0.2, 3, self.surface, RED, "Start")
-        self.pause_button = Button(160, 50, self.width + 20, self.height * 0.35, 3, self.surface, RED, "Pause")
-        self.next_button = Button(160, 50, self.width + 20, self.height * 0.5, 3, self.surface, RED, "Next")
-        self.slow_button = Button(75, 50, self.width + 20, self.height * 0.65, 3, self.surface, RED, ">")
-        self.speed_button = Button(75, 50, self.width + 105, self.height * 0.65, 3, self.surface, RED, ">>")
-        self.end_button = Button(160, 50, self.width + 20, self.height * 0.8, 3, self.surface, RED, "End")
+        self.start_button = Button(160, 50, self.width + 20, self.height * 0.2, 3, self.surface, TURQUOISE, "Start")
+        self.pause_button = Button(160, 50, self.width + 20, self.height * 0.35, 3, self.surface, TURQUOISE, "Pause")
+        self.next_button = Button(160, 50, self.width + 20, self.height * 0.5, 3, self.surface, TURQUOISE, "Next")
+        self.slow_button = Button(75, 50, self.width + 20, self.height * 0.65, 3, self.surface, TURQUOISE, ">")
+        self.speed_button = Button(75, 50, self.width + 105, self.height * 0.65, 3, self.surface, TURQUOISE, ">>")
+        self.end_button = Button(160, 50, self.width + 20, self.height * 0.8, 3, self.surface, TURQUOISE, "End")
+
 
 
     def draw(self, *args):
@@ -50,7 +51,7 @@ class Board(object):
         #Menu
 
         #Vertical line
-        pygame.draw.line(self.surface, RED, (self.width, 0), (self.width, self.height), 3)
+        pygame.draw.line(self.surface, TURQUOISE, (self.width, 0), (self.width, self.height), 3)
 
         #Buttons
         self.start_button.draw()
@@ -62,26 +63,26 @@ class Board(object):
 
         #Menu text
         font = pygame.font.Font('freesansbold.ttf', 32)
-        text = font.render('MENU', True, GREEN)
+        text = font.render('MENU', True, BLUE)
         textRect = text.get_rect()
         textRect.center = (self.width+100, self.height*0.05)
         self.surface.blit(text, textRect)
 
         #Generations count
         font = pygame.font.Font('freesansbold.ttf', 16)
-        text = font.render("Generations: "+str(constants.number_of_generations), True, GREEN)
+        text = font.render("Generations: "+str(constants.number_of_generations), True, DARK_RED)
         textRect = text.get_rect()
         textRect.center = (self.width + 100, self.height * 0.12)
         self.surface.blit(text, textRect)
 
         #Time display
-        text = font.render("Time: " + str(round(constants.time_in_seconds,2)) + "s", True, GREEN)
+        text = font.render("Time: " + str(round(constants.time_in_seconds,2)) + "s", True, DARK_RED)
         textRect = text.get_rect()
         textRect.center = (self.width + 100, self.height * 0.16)
         self.surface.blit(text, textRect)
 
         # Delay display
-        text = font.render("Slowed down by: " + str(constants.delay) + "ms", True, GREEN)
+        text = font.render("Slowed down by: " + str(constants.delay) + "ms", True, DARK_RED)
         textRect = text.get_rect()
         textRect.center = (self.width + 100, self.height * 0.96)
         self.surface.blit(text, textRect)

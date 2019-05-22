@@ -4,11 +4,13 @@ ALIVE = 1
 
 #Colors
 RED = (255,0,0)
-GREEN=(0,128,0)
-BLUE=(0,0,255)
+BLUE=(25,163,222)
 YELLOW=(255,255,0)
-PINK=(255,192,203)
+PINK=(255,154,255)
 BLACK=(0,0,0)
+WHITE=(255,255,255)
+TURQUOISE = (60,239,252)
+DARK_RED = (204,0,102)
 
 #Global variables
 number_of_generations = 0

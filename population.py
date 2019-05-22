@@ -55,7 +55,7 @@ class Population(object):
             #size = (self.box_size, self.box_size)
             #position = (x * self.box_size, y * self.box_size)
             #thickness = 1
-            pygame.draw.rect(surface, PINK, (x * self.box_size, y * self.box_size,self.box_size, self.box_size ))
+            pygame.draw.rect(surface, DARK_RED, (x * self.box_size, y * self.box_size,self.box_size, self.box_size ))
 
     def alive_cells(self):
         """
