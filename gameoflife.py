@@ -5,6 +5,7 @@ import pygame.locals
 import constants
 import time
 import shelve
+import os
 from pygame.locals import MOUSEMOTION, MOUSEBUTTONDOWN
 from board import Board
 from population import Population
@@ -128,8 +129,6 @@ class GameOfLife(object):
                         filename = fullpath[number + 1:]
                     else:
                         break
-                    print(path, filename)
-                    import os
                     curr = os.getcwd()
                     os.chdir(path)
                     shelfFile = shelve.open(filename)
@@ -159,8 +158,6 @@ class GameOfLife(object):
                         filename = fullpath[number + 1:]
                     else:
                         break
-                    print(path, filename)
-                    import os
                     curr = os.getcwd()
                     os.chdir(path)
                     shelfFile = shelve.open(filename)
