@@ -4,11 +4,13 @@ import pygame
 import pygame.locals
 import constants
 import time
+import shelve
 from pygame.locals import MOUSEMOTION, MOUSEBUTTONDOWN
 from board import Board
 from population import Population
-
-
+from tkinter import Tk
+from tkinter.filedialog import askopenfilename
+from tkinter.filedialog import asksaveasfilename
 
 
 class GameOfLife(object):
@@ -35,8 +37,6 @@ class GameOfLife(object):
 
         #To define whether the game has started or not
         self.started = False
-
-
 
     def run(self):
         """
@@ -112,6 +112,72 @@ class GameOfLife(object):
                     constants.time_in_seconds = 0
                     constants.negative_time = 0
                     constants.already_running = False
+                elif self.board.save_button.is_clicked():
+                    root = Tk()
+                    root.withdraw()
+                    root.attributes("-topmost", True)
+                    fullpath = asksaveasfilename()  # show an "Open" dialog box and return the path to the selected file
+                    if (not fullpath):
+                        break
+                    number = fullpath.rfind('/')
+                    path = fullpath[:number]
+                    filename = fullpath[number + 1:]
+                    if(fullpath[-4:]==".dir"):
+                        filename = fullpath[number + 1:-4]
+                    elif(fullpath.rfind(".")==-1):
+                        filename = fullpath[number + 1:]
+                    else:
+                        break
+                    print(path, filename)
+                    import os
+                    curr = os.getcwd()
+                    os.chdir(path)
+                    shelfFile = shelve.open(filename)
+                    shelfFile['constants.delay'] =constants.delay
+                    shelfFile['constants.time_in_seconds'] =constants.time_in_seconds
+                    shelfFile['constants.number_of_generations'] = constants.number_of_generations
+                    shelfFile['population.box_size'] = self.population.box_size
+                    shelfFile['population.height'] = self.population.height
+                    shelfFile['population.width'] = self.population.width
+                    shelfFile['population.generation'] = self.population.generation
+                    shelfFile.close()
+                    os.chdir(curr)
+
+                elif self.board.load_button.is_clicked():
+                    root = Tk()
+                    root.withdraw()
+                    root.attributes("-topmost", True)
+                    fullpath = askopenfilename()  # show an "Open" dialog box and return the path to the selected file
+                    if(not fullpath):
+                        break
+                    number = fullpath.rfind('/')
+                    path = fullpath[:number]
+                    filename = fullpath[number + 1:]
+                    if (fullpath[-4:] == ".dir"):
+                        filename = fullpath[number + 1:-4]
+                    elif (fullpath.rfind(".") == -1):
+                        filename = fullpath[number + 1:]
+                    else:
+                        break
+                    print(path, filename)
+                    import os
+                    curr = os.getcwd()
+                    os.chdir(path)
+                    shelfFile = shelve.open(filename)
+                    self.started = False
+                    constants.number_of_generations = 0
+                    constants.time_in_seconds = 0
+                    constants.negative_time = 0
+                    constants.already_running = False
+                    constants.delay=shelfFile['constants.delay']
+                    constants.time_in_seconds = shelfFile['constants.time_in_seconds']
+                    constants.number_of_generations = shelfFile['constants.number_of_generations']
+                    self.population.box_size = shelfFile['population.box_size']
+                    self.population.height = shelfFile['population.height']
+                    self.population.width = shelfFile['population.width']
+                    self.population.generation = shelfFile['population.generation']
+                    shelfFile.close()
+                    os.chdir(curr)
                 else:
                     self.population.handle_mouse()
         return False
