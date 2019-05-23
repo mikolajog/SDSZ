@@ -1,0 +1,17 @@
+ABOUT GAME:
+Click to place living cells, then click Start. Cells can be added only when the game is stopped.
+Simulation follows the rules of Conway's Game of Life
+
+
+BUTTONS:
+Start   - starts simulation
+Pause   - stops simulation, allows you to place new active cells
+Next    - stops simulation and generates new generation after each click
+>       - slows down the simulation
+>>      - speeds up the simulation
+Load    - allows you to load previously saved game status, please pick file with .dir extension
+Save    - saves your simulation status to file with name of your choice
+End     - ends current simulation, clears the map and resets data
+
+
+
