@@ -4,11 +4,15 @@ import pygame
 import pygame.locals
 import constants
 import time
+import shelve
 from pygame.locals import MOUSEMOTION, MOUSEBUTTONDOWN
 from board import Board
 from population import Population
-
-
+from tkinter import Tk
+from tkinter.filedialog import askopenfilename
+from tkinter.filedialog import asksaveasfilename
+from constants import *
+import tkinter as tk
 
 
 class GameOfLife(object):
@@ -28,6 +32,7 @@ class GameOfLife(object):
 
         self.board = Board(width * cell_size, height * cell_size)
 
+
         #Clock responsible for frequency of drawing cells
         self.fps_clock = pygame.time.Clock()
 
@@ -35,8 +40,6 @@ class GameOfLife(object):
 
         #To define whether the game has started or not
         self.started = False
-
-
 
     def run(self):
         """
@@ -49,6 +52,20 @@ class GameOfLife(object):
                 self.population.cycle_generation()
                 pygame.time.delay(constants.delay)
             self.fps_clock.tick(15)
+
+    def pop_up(self):
+        window = tk.Tk()
+        window.geometry("800x500")
+        window.title("Information")
+        textbox = tk.Text(window, width=95, height=50)
+        textbox.pack()
+        textbox.place(x=15, y=0)
+        textbox.insert(tk.END, "Information:\n",("h1"))
+        with open('info.txt', 'r') as f: #reads text from info.txt file
+            textbox.insert(tk.END, f.read())
+        textbox.config(state='disabled') #read only
+        textbox.tag_config("h1", background="black", foreground="white", font=("freesansbold.ttf",20))
+        window.mainloop()
 
 
     def handle_events(self):
@@ -73,7 +90,6 @@ class GameOfLife(object):
 
             if event.type == MOUSEMOTION or event.type == MOUSEBUTTONDOWN:
                 if self.board.start_button.is_clicked():
-
                     if (self.started == False and constants.already_running == False):
                         constants.start_time = time.time()
                     constants.start_time += constants.negative_time
@@ -82,13 +98,20 @@ class GameOfLife(object):
                     self.started = True
                     constants.already_running = True
                     constants.step_running=False
-
+                    self.board.start_button.color=DARK_RED
+                    self.board.next_button.color=TURQUOISE
+                    self.board.pause_button.color=TURQUOISE
+                    self.board.info_button.color=TURQUOISE
 
 
                 elif self.board.pause_button.is_clicked():
                     if (constants.already_running == True and constants.step_running==False):
                         constants.pause_time = time.time()
                     self.started = False
+                    self.board.start_button.color = TURQUOISE
+                    self.board.next_button.color = TURQUOISE
+                    self.board.pause_button.color = DARK_RED
+                    self.board.info_button.color = TURQUOISE
 
                 elif self.board.next_button.is_clicked():
                     if (constants.step_running==False):
@@ -96,6 +119,10 @@ class GameOfLife(object):
                     constants.step_running=True
                     self.started = False
                     self.population.cycle_generation()
+                    self.board.start_button.color = TURQUOISE
+                    self.board.next_button.color = DARK_RED
+                    self.board.pause_button.color = TURQUOISE
+                    self.board.info_button.color = TURQUOISE
 
                 elif self.board.slow_button.is_clicked():
                         constants.delay+=50
@@ -112,10 +139,91 @@ class GameOfLife(object):
                     constants.time_in_seconds = 0
                     constants.negative_time = 0
                     constants.already_running = False
+                    self.board.start_button.color = TURQUOISE
+                    self.board.next_button.color = TURQUOISE
+                    self.board.pause_button.color = TURQUOISE
+                    self.board.info_button.color = TURQUOISE
+                elif self.board.save_button.is_clicked():
+                    root = Tk()
+                    root.withdraw()
+                    root.attributes("-topmost", True)
+                    fullpath = asksaveasfilename()  # show an "Open" dialog box and return the path to the selected file
+                    if (not fullpath):
+                        break
+                    number = fullpath.rfind('/')
+                    path = fullpath[:number]
+                    filename = fullpath[number + 1:]
+                    if(fullpath[-4:]==".dir"):
+                        filename = fullpath[number + 1:-4]
+                    elif(fullpath.rfind(".")==-1):
+                        filename = fullpath[number + 1:]
+                    else:
+                        break
+                    print(path, filename)
+                    import os
+                    curr = os.getcwd()
+                    os.chdir(path)
+                    shelfFile = shelve.open(filename)
+                    shelfFile['constants.delay'] =constants.delay
+                    shelfFile['constants.time_in_seconds'] =constants.time_in_seconds
+                    shelfFile['constants.number_of_generations'] = constants.number_of_generations
+                    shelfFile['population.box_size'] = self.population.box_size
+                    shelfFile['population.height'] = self.population.height
+                    shelfFile['population.width'] = self.population.width
+                    shelfFile['population.generation'] = self.population.generation
+                    shelfFile.close()
+                    os.chdir(curr)
+
+                elif self.board.load_button.is_clicked():
+                    root = Tk()
+                    root.withdraw()
+                    root.attributes("-topmost", True)
+                    fullpath = askopenfilename()  # show an "Open" dialog box and return the path to the selected file
+                    if(not fullpath):
+                        break
+                    number = fullpath.rfind('/')
+                    path = fullpath[:number]
+                    filename = fullpath[number + 1:]
+                    if (fullpath[-4:] == ".dir"):
+                        filename = fullpath[number + 1:-4]
+                    elif (fullpath.rfind(".") == -1):
+                        filename = fullpath[number + 1:]
+                    else:
+                        break
+                    print(path, filename)
+                    import os
+                    curr = os.getcwd()
+                    os.chdir(path)
+                    shelfFile = shelve.open(filename)
+                    self.started = False
+                    constants.number_of_generations = 0
+                    constants.time_in_seconds = 0
+                    constants.negative_time = 0
+                    constants.already_running = False
+                    constants.delay=shelfFile['constants.delay']
+                    constants.time_in_seconds = shelfFile['constants.time_in_seconds']
+                    constants.number_of_generations = shelfFile['constants.number_of_generations']
+                    self.population.box_size = shelfFile['population.box_size']
+                    self.population.height = shelfFile['population.height']
+                    self.population.width = shelfFile['population.width']
+                    self.population.generation = shelfFile['population.generation']
+                    shelfFile.close()
+                    os.chdir(curr)
+
+                elif self.board.info_button.is_clicked():
+                    self.started = False
+                    self.board.start_button.color = TURQUOISE
+                    self.board.next_button.color = TURQUOISE
+                    self.board.pause_button.color = TURQUOISE
+                    self.board.info_button.color = DARK_RED
+                    pygame.display.update()
+                    if (constants.already_running == True and constants.step_running==False):
+                        constants.pause_time = time.time()
+                    self.pop_up()
+
+
                 else:
                     self.population.handle_mouse()
         return False
-
-
 
 

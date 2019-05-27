@@ -29,12 +29,15 @@ class Board(object):
         self.width = width
 
         #Prepares buttons for menu
-        self.start_button = Button(160, 50, self.width + 20, self.height * 0.2, 3, self.surface, TURQUOISE, "Start")
-        self.pause_button = Button(160, 50, self.width + 20, self.height * 0.35, 3, self.surface, TURQUOISE, "Pause")
-        self.next_button = Button(160, 50, self.width + 20, self.height * 0.5, 3, self.surface, TURQUOISE, "Next")
-        self.slow_button = Button(75, 50, self.width + 20, self.height * 0.65, 3, self.surface, TURQUOISE, ">")
-        self.speed_button = Button(75, 50, self.width + 105, self.height * 0.65, 3, self.surface, TURQUOISE, ">>")
-        self.end_button = Button(160, 50, self.width + 20, self.height * 0.8, 3, self.surface, TURQUOISE, "End")
+        self.start_button = Button(160, 35, self.width + 20, self.height * 0.20, 2, self.surface, TURQUOISE, "Start",32)
+        self.pause_button = Button(160, 35, self.width + 20, self.height * 0.30, 2, self.surface, TURQUOISE, "Pause",32)
+        self.next_button = Button(160, 35, self.width + 20, self.height * 0.40, 2, self.surface, TURQUOISE, "Next",32)
+        self.slow_button = Button(75, 35, self.width + 20, self.height * 0.50, 2, self.surface, TURQUOISE, ">",32)
+        self.speed_button = Button(75, 35, self.width + 105, self.height * 0.50, 2, self.surface, TURQUOISE, ">>",32)
+        self.load_button = Button(75, 35, self.width + 20, self.height * 0.60, 2, self.surface, TURQUOISE, "Load",20)
+        self.save_button = Button(75, 35, self.width + 105, self.height * 0.60, 2, self.surface, TURQUOISE, "Save",20)
+        self.end_button = Button(160, 35, self.width + 20, self.height * 0.70, 2, self.surface, TURQUOISE, "End",32)
+        self.info_button = Button(160, 35, self.width + 20, self.height * 0.80, 2, self.surface, TURQUOISE, "Info", 32)
 
 
 
@@ -59,7 +62,10 @@ class Board(object):
         self.next_button.draw()
         self.slow_button.draw()
         self.speed_button.draw()
+        self.load_button.draw()
+        self.save_button.draw()
         self.end_button.draw()
+        self.info_button.draw()
 
         #Menu text
         font = pygame.font.Font('freesansbold.ttf', 32)

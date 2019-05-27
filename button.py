@@ -4,7 +4,7 @@ class Button(object):
     """
     Creates Button with provided text, color, position and size
     """
-    def __init__(self, size_x, size_y, position_x, position_y, thickness, surface, color, tekst):
+    def __init__(self, size_x, size_y, position_x, position_y, thickness, surface, color, tekst, font_size):
         self.size_x = size_x
         self.size_y = size_y
         self.position_x = position_x
@@ -13,6 +13,7 @@ class Button(object):
         self.surface = surface
         self.color = color
         self.tekst = tekst
+        self.font_size = font_size
 
     def draw(self):
         """
@@ -22,7 +23,7 @@ class Button(object):
         pygame.draw.rect(self.surface, self.color, pygame.locals.Rect((self.position_x, self.position_y), (self.size_x, self.size_y)), self.thickness)
 
         #writes text on the button
-        font = pygame.font.Font('freesansbold.ttf', 32)
+        font = pygame.font.Font('freesansbold.ttf', self.font_size)
         text = font.render(self.tekst, True, self.color)
         textRect = text.get_rect()
         textRect.center = (self.position_x+(self.size_x*0.5), self.position_y+(self.size_y*0.5))
